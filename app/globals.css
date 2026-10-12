@@ -1,0 +1,248 @@
+@import "tailwindcss";
+
+/* ---------- Design tokens (themes switch via html[data-theme]) ---------- */
+:root,
+:root[data-theme="cream"] {
+  --canvas: #fbf5ec;
+  --surface: #fffdf8;
+  --surface-2: #f5ede1;
+  --ink: #4a4036;
+  --muted: #847767;
+  --line: #eadfcf;
+  --primary: #7a64c4;
+  --primary-ink: #ffffff;
+  --primary-soft: #ece6fa;
+  --lavender: #b9a6e8;
+  --mint: #9fd8c4;
+  --peach: #f6b8a6;
+  --sky: #a9cdef;
+  --butter: #f6dc8c;
+  --success: #3f9a78;
+  --success-soft: #dcf2e8;
+  --warn: #c56f4e;
+  --warn-soft: #fbe6dc;
+  --shadow: 0 1px 2px rgb(74 64 54 / 0.06), 0 6px 20px rgb(74 64 54 / 0.08);
+  --board-frame: #f1e6d6;
+  color-scheme: light;
+}
+
+:root[data-theme="mint"] {
+  --canvas: #eef7f2;
+  --surface: #fbfefc;
+  --surface-2: #e1f0e8;
+  --ink: #2f4a40;
+  --muted: #64806f;
+  --line: #d3e7dc;
+  --primary: #2f8a6c;
+  --primary-ink: #ffffff;
+  --primary-soft: #d6efe4;
+  --board-frame: #dcece3;
+}
+
+:root[data-theme="dusk"] {
+  --canvas: #26222f;
+  --surface: #322d3d;
+  --surface-2: #3b3548;
+  --ink: #f4ede4;
+  --muted: #bdb3c9;
+  --line: #4a4359;
+  --primary: #c3b2f2;
+  --primary-ink: #231d31;
+  --primary-soft: #463d5e;
+  --success: #8fdcbe;
+  --success-soft: #2f4a42;
+  --warn: #f6b8a6;
+  --warn-soft: #4f3a37;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.25), 0 8px 24px rgb(0 0 0 / 0.3);
+  --board-frame: #3b3548;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-soft: var(--primary-soft);
+  --color-lavender: var(--lavender);
+  --color-mint: var(--mint);
+  --color-peach: var(--peach);
+  --color-sky: var(--sky);
+  --color-butter: var(--butter);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-board-frame: var(--board-frame);
+  --font-sans: var(--font-nunito), ui-rounded, system-ui, sans-serif;
+  --shadow-soft: var(--shadow);
+}
+
+html {
+  background: var(--canvas);
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Board ---------- */
+.board {
+  touch-action: none; /* dragging on the board never scrolls the page */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.obj {
+  cursor: grab;
+  transition: transform 240ms cubic-bezier(0.2, 0.9, 0.25, 1.15);
+  outline: none;
+}
+.obj.dragging {
+  cursor: grabbing;
+  transition: none;
+}
+.obj-body {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 160ms ease-out;
+}
+.obj.dragging .obj-body,
+.obj.selected .obj-body {
+  transform: scale(1.06);
+}
+.obj:focus-visible .focus-ring {
+  stroke: var(--primary);
+  stroke-width: 4;
+}
+
+.snap-pop {
+  animation: snap-pop 360ms cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+@keyframes snap-pop {
+  0% { transform: scale(1.1); }
+  55% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+.nudge {
+  animation: nudge 420ms ease-in-out;
+}
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  60% { transform: translateX(4px); }
+}
+
+.sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sparkle 700ms ease-out forwards;
+  pointer-events: none;
+}
+@keyframes sparkle {
+  0% { opacity: 0.9; transform: scale(0.6); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+.pulse {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.badge-in {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: badge-in 300ms cubic-bezier(0.2, 0.9, 0.3, 1.5);
+}
+@keyframes badge-in {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+.confetti {
+  animation: confetti 1.6s cubic-bezier(0.2, 0.7, 0.4, 1) forwards;
+  pointer-events: none;
+}
+@keyframes confetti {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-140px) scale(1); }
+}
+
+.shine {
+  animation: shine 1.2s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes shine {
+  from { transform: translateX(-120%); opacity: 0.0; }
+  20% { opacity: 0.5; }
+  to { transform: translateX(120%); opacity: 0; }
+}
+
+/* ---------- UI motion ---------- */
+.rise-in {
+  animation: rise-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.fade-in {
+  animation: fade-in 260ms ease-out both;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.star-pop {
+  animation: star-pop 480ms cubic-bezier(0.2, 0.9, 0.3, 1.6) both;
+}
+@keyframes star-pop {
+  from { opacity: 0; transform: scale(0.2) rotate(-30deg); }
+  to { opacity: 1; transform: none; }
+}
+
+.unlock-pop {
+  animation: unlock-pop 900ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+}
+@keyframes unlock-pop {
+  0% { transform: scale(0.94); box-shadow: 0 0 0 0 var(--primary); }
+  50% { transform: scale(1.03); box-shadow: 0 0 0 8px var(--primary-soft); }
+  100% { transform: none; box-shadow: 0 0 0 0 transparent; }
+}
+
+/* ---------- Reduced motion: system preference unless the player chose "full" ---------- */
+:root[data-motion="reduced"] *,
+:root[data-motion="reduced"] *::before,
+:root[data-motion="reduced"] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="full"]) *,
+  :root:not([data-motion="full"]) *::before,
+  :root:not([data-motion="full"]) *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
